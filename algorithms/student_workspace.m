@@ -9,6 +9,7 @@ if (read_only_vars.counter == 1)
 
 end
 
+
 % 9. Update particle filter
 public_vars.particles = update_particle_filter(read_only_vars, public_vars);
 
