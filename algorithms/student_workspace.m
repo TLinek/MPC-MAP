@@ -7,7 +7,16 @@ if (read_only_vars.counter == 1)
     public_vars = init_particle_filter(read_only_vars, public_vars);
     public_vars = init_kalman_filter(read_only_vars, public_vars);
 
+    % WEEK 2
+    public_vars.gnss_data_history = [];
+    public_vars.lidar_data_history = [];
 end
+
+% WEEK 2
+public_vars.gnss_data_history = [public_vars.gnss_data_history; read_only_vars.gnss_position];
+public_vars.lidar_data_history = [public_vars.lidar_data_history; read_only_vars.lidar_distances];
+
+
 
 
 % 9. Update particle filter
