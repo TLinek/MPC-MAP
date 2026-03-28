@@ -2,7 +2,7 @@ close all;
 clear;
 clc;
 
-load('data_history.mat')
+load('data_history_1.mat')
 
 
 %% TASK 2
@@ -38,23 +38,20 @@ gnss_variance = gnss_std.^2;
 lidar_variance = lidar_std.^2;
 
 %% TASK 4
-x_gnss = [-5*gnss_std(1):0.01:5*gnss_std(1)];
-x_lidar = [-5*lidar_std(1):0.01:5*lidar_std(1)];
+x_gnss = [-5*gnss_std(1):0.005:5*gnss_std(1)];
+x_lidar = [-5*lidar_std(1):0.005:5*lidar_std(1)];
 
 gnss_pdf = norm_pdf(x_gnss, 0, gnss_std(1));
 lidar_pdf = norm_pdf(x_lidar, 0, lidar_std(1));
 
 figure(3)
-subplot(1,2,1)
-plot(x_gnss, gnss_pdf)
-title("GNSS PDF (1. axis)")
-xlabel("Distance [m]")
-ylabel("PDF [-]")
-subplot(1,2,2)
-plot(x_lidar, lidar_pdf)
-title("Lidar PDF (channel 1")
-xlabel("Distance [m]")
-ylabel("PDF [-]")
+plot(x_gnss, gnss_pdf, LineWidth=2)
+hold on
+plot(x_lidar, lidar_pdf, LineWidth=2)
+xlabel("Distance Error [m]")
+ylabel("PD [-]")
+legend("GNSS PDF","LiDAR PDF")
+
 
 
 
