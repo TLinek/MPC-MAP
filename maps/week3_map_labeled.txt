@@ -1,0 +1,10 @@
+9,9                      % pozice cile
+0,0,10,10                % velikost mapy Xstart, Ystart, Xend, Yend
+0, 0, 10, 0              % definování zdí/přímek
+10, 0, 10, 10            % (x,y) počátek, (x,y) konec
+10, 10, 0, 10
+0, 10, 0, 0
+3.3, 0, 3.3, 7
+7.2, 10, 7.2, 3
+inf                      % pro definici oblasti bez GNSS
+5,0,10,0,5,5,10,10,0,10  %definice oblasti bez GNSS posloupnost bodu x y

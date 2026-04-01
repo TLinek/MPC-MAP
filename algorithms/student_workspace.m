@@ -8,13 +8,71 @@ if (read_only_vars.counter == 1)
     public_vars = init_kalman_filter(read_only_vars, public_vars);
 
     % WEEK 2
-    public_vars.gnss_data_history = [];
-    public_vars.lidar_data_history = [];
+    %public_vars.gnss_data_history = [];
+    %public_vars.lidar_data_history = [];
 end
 
 % WEEK 2
-public_vars.gnss_data_history = [public_vars.gnss_data_history; read_only_vars.gnss_position];
-public_vars.lidar_data_history = [public_vars.lidar_data_history; read_only_vars.lidar_distances];
+%public_vars.gnss_data_history = [public_vars.gnss_data_history; read_only_vars.gnss_position];
+%public_vars.lidar_data_history = [public_vars.lidar_data_history; read_only_vars.lidar_distances];
+
+% WEEK 3
+% line path
+    x = [1:0.1:13];
+    y_line = linspace(1, 14, length(x));
+    public_vars.path  = [x', y_line'];
+    public_vars.path_index = 1;
+
+% sine path
+    % x = [1:0.1:13];
+    % y_line = linspace(1, 14, length(x));
+    % y_sine = y_line + sin(2*x) - 0.5;
+    % public_vars.path  = [x', y_sine'];
+    % public_vars.path_index = 1;
+
+% circular path
+    % x1_center = 1;
+    % y1_center = 8;
+    % R1 = 7;
+    % angle1 = [-pi/2:0.005*pi:-0.1];
+    % x1 = x1_center+R1*cos(angle1);
+    % y1 = y1_center+R1*sin(angle1);
+    % public_vars.path  = [x1', y1'];
+    % public_vars.path_index = 1;
+    % 
+    % x2_center = 14;
+    % y2_center = 8;
+    % R2 = 6;
+    % angle2 = [pi:-0.005*pi:1.1*pi/2];
+    % x2 = x2_center+R2*cos(angle2);
+    % y2 = y2_center+R2*sin(angle2);
+    % public_vars.path  = [public_vars.path; x2', y2'];
+    % public_vars.path_index = 1;
+
+% complex path
+    x_sine = [2:0.1:11];
+    y_sine = 0.8*sin(x_sine*0.7 - 1.4) +2;
+    public_vars.path  = [x_sine', y_sine'];
+
+    x = [12, 13, 10, 8, 6, 3, 3];
+    y = [2.5, 4 ,6, 7 ,10, 11, 13];
+    t = 0:0.1:6;
+    x_curve = spline(0:6, x, t);
+    y_curve = spline(0:6, y, t);
+    public_vars.path  = [public_vars.path; x_curve', y_curve'];
+
+    x = [3.3:0.1:13];
+    y_line = linspace(13, 14, length(x));
+    public_vars.path  = [public_vars.path; x', y_line'];
+
+    public_vars.path_index = 1;
+
+
+
+
+
+
+
 
 
 
