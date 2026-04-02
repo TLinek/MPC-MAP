@@ -18,15 +18,15 @@ end
 
 % WEEK 3
 % line path
-    x = [1:0.1:13];
-    y_line = linspace(1, 14, length(x));
-    public_vars.path  = [x', y_line'];
-    public_vars.path_index = 1;
+    % x = [1:0.1:13];
+    % y_line = linspace(1, 14, length(x));
+    % public_vars.path  = [x', y_line'];
+    % public_vars.path_index = 1;
 
 % sine path
     % x = [1:0.1:13];
-    % y_line = linspace(1, 14, length(x));
-    % y_sine = y_line + sin(2*x) - 0.5;
+    % y_line = linspace(1, 12.8, length(x));
+    % y_sine = y_line + 0.9*sin(4*x) +0.5;
     % public_vars.path  = [x', y_sine'];
     % public_vars.path_index = 1;
 

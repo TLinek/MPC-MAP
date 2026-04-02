@@ -2,8 +2,8 @@ function [public_vars] = plan_motion(read_only_vars, public_vars)
 %PLAN_MOTION Summary of this function goes here
 
 % I. Pick navigation target
-epsilon = 0.4;
-kappa = 8;
+epsilon = 0.25;
+kappa = 6;
 
 
 R_pose = read_only_vars.mocap_pose(1:2);
@@ -24,7 +24,6 @@ d = read_only_vars.agent_drive.interwheel_dist;
 v_r = v + (omega*d)/2;
 v_l = v - (omega*d)/2;
 public_vars.motion_vector = [v_r, v_l];
-
 
 
 
