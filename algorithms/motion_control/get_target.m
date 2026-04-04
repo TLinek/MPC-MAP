@@ -1,7 +1,7 @@
 function [target, public_vars] = get_target(public_vars, P_point)
 %GET_TARGET Summary of this function goes here
 
-    actual_path_index = public_vars.path_index+1;
+    actual_path_index = public_vars.path_index;
     remaining_path_points = public_vars.path(actual_path_index:end, :);
     distances = vecnorm(remaining_path_points - P_point, 2, 2); %2 eukli. vz., 2 podle řádků v matici
     [min_distance, index] = min(distances);
