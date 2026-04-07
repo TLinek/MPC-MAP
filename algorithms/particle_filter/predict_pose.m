@@ -28,9 +28,7 @@ x_new = x_new + randn() * sigma_pose_noise;
 y_new = y_new + randn() * sigma_pose_noise;
 theta_new = theta_new + randn() * sigma_theta_noise;
 
-new_pose = [x_new;
-            y_new;
-            theta_new];
+new_pose = [x_new, y_new, theta_new];
 
 end
 
