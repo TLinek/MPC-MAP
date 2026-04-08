@@ -21,8 +21,8 @@ else
     theta_new = theta_old;
 end
 
-sigma_pose_noise = 0.03;
-sigma_theta_noise = 0.08;
+sigma_pose_noise = 0.1;
+sigma_theta_noise = 0.9;
 
 x_new = x_new + randn() * sigma_pose_noise;
 y_new = y_new + randn() * sigma_pose_noise;

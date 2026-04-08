@@ -13,12 +13,14 @@ for n = 1:N
     if summ == 0
         summ = 0.0000001;
     end
-    
-    weights(n) = 1 / sqrt(summ);
-    
+
+    if ~isnan(summ)
+        weights(n) = 1 / sqrt(summ);
+    else
+        weights(n) = 0.00000001;
+    end
+
 end
-
-
 
 
 
