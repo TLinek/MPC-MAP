@@ -6,11 +6,11 @@ epsilon = 0.25;
 kappa = 6;
 
 
-R_pose = read_only_vars.mocap_pose(1:2);
-R_theta = read_only_vars.mocap_pose(3);
+% R_pose = read_only_vars.mocap_pose(1:2);
+% R_theta = read_only_vars.mocap_pose(3);
 
-% R_pose = public_vars.estimated_pose(1:2);
-% R_theta = public_vars.estimated_pose(3);
+R_pose = public_vars.estimated_pose(1:2);
+R_theta = public_vars.estimated_pose(3);
 
 P_pose =  R_pose + epsilon*[cos(R_theta) sin(R_theta)];
 G_pose = get_target(public_vars, P_pose);

@@ -50,24 +50,62 @@ end
     % public_vars.path_index = 1;
 
 % complex path
-    x_sine = [2:0.1:11];
-    y_sine = 0.8*sin(x_sine*0.7 - 1.4) +2;
-    public_vars.path  = [x_sine', y_sine'];
+    % x_sine = [2:0.1:11];
+    % y_sine = 0.8*sin(x_sine*0.7 - 1.4) +2;
+    % public_vars.path  = [x_sine', y_sine'];
+    % 
+    % x = [12, 13, 10, 8, 6, 3, 3];
+    % y = [2.5, 4 ,6, 7 ,10, 11, 13];
+    % t = 0:0.1:6;
+    % x_curve = spline(0:6, x, t);
+    % y_curve = spline(0:6, y, t);
+    % public_vars.path  = [public_vars.path; x_curve', y_curve'];
+    % 
+    % x = [3.3:0.1:13];
+    % y_line = linspace(13, 14, length(x));
+    % public_vars.path  = [public_vars.path; x', y_line'];
+    % 
+    % public_vars.path_index = 1;
 
-    x = [12, 13, 10, 8, 6, 3, 3];
-    y = [2.5, 4 ,6, 7 ,10, 11, 13];
-    t = 0:0.1:6;
-    x_curve = spline(0:6, x, t);
-    y_curve = spline(0:6, y, t);
-    public_vars.path  = [public_vars.path; x_curve', y_curve'];
 
-    x = [3.3:0.1:13];
-    y_line = linspace(13, 14, length(x));
+% path indoor_3 map
+    x = [1:0.1:6];
+    y_line = linspace(1, 5, length(x));
+    public_vars.path  = [x', y_line'];
+
+    x = [6.05:0.1:7];
+    y_line = linspace(5, 5, length(x));
+    public_vars.path  = [public_vars.path; x', y_line'];
+
+    x = ones(1,40) * 7;
+    y_line = linspace(5, 1, length(x));
+    public_vars.path  = [public_vars.path; x', y_line'];
+
+    x = [7.05:0.1:9];
+    y_line = linspace(1, 1, length(x));
+    public_vars.path  = [public_vars.path; x', y_line'];
+
+    x = ones(1,80) * 9;
+    y_line = linspace(1, 9, length(x));
+    public_vars.path  = [public_vars.path; x', y_line'];
+
+    x = [9.05:-0.1:7];
+    y_line = linspace(9.05, 9, length(x));
+    public_vars.path  = [public_vars.path; x', y_line'];
+
+    x = [7.05:-0.1:1];
+    y_line = linspace(9.05, 4, length(x));
+    public_vars.path  = [public_vars.path; x', y_line'];
+
+    x = ones(1,30) * 1;
+    y_line = linspace(4.05, 7, length(x));
+    public_vars.path  = [public_vars.path; x', y_line'];
+
+    x = [1.05:0.1:3];
+    y_line = linspace(7.05, 9, length(x));
     public_vars.path  = [public_vars.path; x', y_line'];
 
     public_vars.path_index = 1;
-
-
 
 
 
