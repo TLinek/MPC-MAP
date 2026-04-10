@@ -34,7 +34,7 @@ end
     % x1_center = 1;
     % y1_center = 8;
     % R1 = 7;
-    % angle1 = [-pi/2:0.005*pi:-0.1];
+    % angle1 = [-pi/2:0.005*pi:-0.01*pi];
     % x1 = x1_center+R1*cos(angle1);
     % y1 = y1_center+R1*sin(angle1);
     % public_vars.path  = [x1', y1'];
@@ -55,8 +55,8 @@ end
     % public_vars.path  = [x_sine', y_sine'];
     % 
     % x = [12, 13, 10, 8, 6, 3, 3];
-    % y = [2.5, 4 ,6, 7 ,10, 11, 13];
-    % t = 0:0.1:6;
+    % y = [2.2, 4 ,6, 7 ,10, 11, 13];
+    % t = 0:0.05:6;
     % x_curve = spline(0:6, x, t);
     % y_curve = spline(0:6, y, t);
     % public_vars.path  = [public_vars.path; x_curve', y_curve'];
