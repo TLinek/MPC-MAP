@@ -3,9 +3,19 @@ function [public_vars] = student_workspace(read_only_vars,public_vars)
 
 % 8. Perform initialization procedure
 if (read_only_vars.counter == 1)
-          
-    public_vars = init_particle_filter(read_only_vars, public_vars);
-    public_vars = init_kalman_filter(read_only_vars, public_vars);
+     
+
+    public_vars.pf_enabled = 0;
+    public_vars.kf_enabled = 0;
+
+    public_vars.path_index = 1;
+
+    if public_vars.pf_enabled
+        public_vars = init_particle_filter(read_only_vars, public_vars);
+    end
+
+    %public_vars = init_kalman_filter(read_only_vars, public_vars);
+
 
     % WEEK 2
     %public_vars.gnss_data_history = [];
@@ -69,67 +79,80 @@ end
 
 
 % path indoor_3 map
-    x = [1:0.1:6];
-    y_line = linspace(1, 5, length(x));
-    public_vars.path  = [x', y_line'];
+    % x = [1:0.1:6];
+    % y_line = linspace(1, 5, length(x));
+    % public_vars.path  = [x', y_line'];
+    % 
+    % x = [6.05:0.1:7];
+    % y_line = linspace(5, 5, length(x));
+    % public_vars.path  = [public_vars.path; x', y_line'];
+    % 
+    % x = ones(1,40) * 7;
+    % y_line = linspace(5, 1, length(x));
+    % public_vars.path  = [public_vars.path; x', y_line'];
+    % 
+    % x = [7.05:0.1:9];
+    % y_line = linspace(1, 1, length(x));
+    % public_vars.path  = [public_vars.path; x', y_line'];
+    % 
+    % x = ones(1,80) * 9;
+    % y_line = linspace(1, 9, length(x));
+    % public_vars.path  = [public_vars.path; x', y_line'];
+    % 
+    % x = [9.05:-0.1:7];
+    % y_line = linspace(9.05, 9, length(x));
+    % public_vars.path  = [public_vars.path; x', y_line'];
+    % 
+    % x = [7.05:-0.1:1];
+    % y_line = linspace(9.05, 4, length(x));
+    % public_vars.path  = [public_vars.path; x', y_line'];
+    % 
+    % x = ones(1,30) * 1;
+    % y_line = linspace(4.05, 7, length(x));
+    % public_vars.path  = [public_vars.path; x', y_line'];
+    % 
+    % x = [1.05:0.1:3];
+    % y_line = linspace(7.05, 9, length(x));
+    % public_vars.path  = [public_vars.path; x', y_line'];
+    % 
+    % public_vars.path_index = 1;
+    % 
 
-    x = [6.05:0.1:7];
-    y_line = linspace(5, 5, length(x));
-    public_vars.path  = [public_vars.path; x', y_line'];
-
-    x = ones(1,40) * 7;
-    y_line = linspace(5, 1, length(x));
-    public_vars.path  = [public_vars.path; x', y_line'];
-
-    x = [7.05:0.1:9];
-    y_line = linspace(1, 1, length(x));
-    public_vars.path  = [public_vars.path; x', y_line'];
-
-    x = ones(1,80) * 9;
-    y_line = linspace(1, 9, length(x));
-    public_vars.path  = [public_vars.path; x', y_line'];
-
-    x = [9.05:-0.1:7];
-    y_line = linspace(9.05, 9, length(x));
-    public_vars.path  = [public_vars.path; x', y_line'];
-
-    x = [7.05:-0.1:1];
-    y_line = linspace(9.05, 4, length(x));
-    public_vars.path  = [public_vars.path; x', y_line'];
-
-    x = ones(1,30) * 1;
-    y_line = linspace(4.05, 7, length(x));
-    public_vars.path  = [public_vars.path; x', y_line'];
-
-    x = [1.05:0.1:3];
-    y_line = linspace(7.05, 9, length(x));
-    public_vars.path  = [public_vars.path; x', y_line'];
-
-    public_vars.path_index = 1;
-
-
-
-
+% path map outdoor_1
+    x = [2, 4, 8, 12, 16];
+    y = [2, 6 ,8, 7.8 ,2];
+    t = 0:0.05:4;
+    x_curve = spline(0:4, x, t);
+    y_curve = spline(0:4, y, t);
+    public_vars.path  = [x_curve', y_curve'];
 
 
 
 
 
 % 9. Update particle filter
-public_vars.particles = update_particle_filter(read_only_vars, public_vars);
+if public_vars.pf_enabled
+    public_vars.particles = update_particle_filter(read_only_vars, public_vars);
+end
 
 % 10. Update Kalman filter
-[public_vars.mu, public_vars.sigma] = update_kalman_filter(read_only_vars, public_vars);
+if read_only_vars.counter == 100
+    public_vars = init_kalman_filter(read_only_vars, public_vars);
+elseif read_only_vars.counter > 100 
+    [public_vars.mu, public_vars.sigma] = update_kalman_filter(read_only_vars, public_vars);
 
-% 11. Estimate current robot position
-public_vars.estimated_pose = estimate_pose(public_vars); % (x,y,theta)
+    % 11. Estimate current robot position
+    public_vars.estimated_pose = estimate_pose(public_vars); % (x,y,theta)
 
-% 12. Path planning
-public_vars.path = plan_path(read_only_vars, public_vars);
 
-% 13. Plan next motion command
-public_vars = plan_motion(read_only_vars, public_vars);
+    % 12. Path planning
+    public_vars.path = plan_path(read_only_vars, public_vars);
 
+    % 13. Plan next motion command
+
+    public_vars = plan_motion(read_only_vars, public_vars);
+
+end
 
 
 end

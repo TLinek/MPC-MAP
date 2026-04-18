@@ -2,17 +2,31 @@ function [target, public_vars] = get_target(public_vars, P_point)
 %GET_TARGET Summary of this function goes here
 
     actual_path_index = public_vars.path_index;
-    remaining_path_points = public_vars.path(actual_path_index:end, :);
-    distances = vecnorm(remaining_path_points - P_point, 2, 2); %2 eukli. vz., 2 podle řádků v matici
-    [min_distance, index] = min(distances);
-    target_index = actual_path_index + index;
+    path = public_vars.path;
 
-    if target_index >= length(public_vars.path)
-        target_index = actual_path_index;
+    % robor už miří na konec cesty
+    if actual_path_index >= length(path)
+        public_vars.path_index = actual_path_index;
+        target = path(end, :);
+        return;
     end
 
-    public_vars.path_index = target_index;
-    target = public_vars.path(target_index, :);
+    % hledání nejbližšího bodu maximálně v 10 následujících bodech
+    remaining_points = path(actual_path_index:end, :);
+    end_search = min(actual_path_index+10, length(remaining_points));
+    selected_points = remaining_points(1:end_search,:);
 
+
+    distances = vecnorm(selected_points - P_point, 2, 2); %2 eukli. vz., 2 podle řádků v matici
+    [min_distance, index] = min(distances);
+
+    if min_distance < 0.4
+        if (actual_path_index + index - 1) < length(path)
+            actual_path_index = actual_path_index + 1;
+        end
+    end
+
+    public_vars.path_index = actual_path_index;
+    target = path(actual_path_index, :);
 end
 
