@@ -3,28 +3,23 @@ function [public_vars] = student_workspace(read_only_vars,public_vars)
 
 % 8. Perform initialization procedure
 if (read_only_vars.counter == 1)
+    public_vars.indoor = 0;
+    public_vars.indoor_prev = 0;
+    public_vars.indoor_transition = 0;
      
 
-    public_vars.pf_enabled = 0;
+    public_vars.pf_enabled = 1;
     public_vars.kf_enabled = 0;
 
     public_vars.path_index = 1;
 
-    if public_vars.pf_enabled
-        public_vars = init_particle_filter(read_only_vars, public_vars);
-    end
-
-    %public_vars = init_kalman_filter(read_only_vars, public_vars);
 
 
-    % WEEK 2
-    %public_vars.gnss_data_history = [];
-    %public_vars.lidar_data_history = [];
+
+
+
 end
 
-% WEEK 2
-%public_vars.gnss_data_history = [public_vars.gnss_data_history; read_only_vars.gnss_position];
-%public_vars.lidar_data_history = [public_vars.lidar_data_history; read_only_vars.lidar_distances];
 
 % WEEK 3
 % line path
@@ -119,30 +114,50 @@ end
     % 
 
 % path map outdoor_1
-    x = [2, 4, 8, 12, 16];
-    y = [2, 6 ,8, 7.8 ,2];
-    t = 0:0.05:4;
-    x_curve = spline(0:4, x, t);
-    y_curve = spline(0:4, y, t);
-    public_vars.path  = [x_curve', y_curve'];
+    % x = [2, 4, 8, 12, 16];
+    % y = [2, 6 ,8, 7.8 ,2];
+    % t = 0:0.05:4;
+    % x_curve = spline(0:4, x, t);
+    % y_curve = spline(0:4, y, t);
+    % public_vars.path  = [x_curve', y_curve'];
+    % 
+
+
+
+public_vars.indoor = any(isnan(read_only_vars.gnss_position));
+if public_vars.indoor == 1 && public_vars.indoor_prev == 0
+    public_vars.indoor_transition = 1;
+else
+    public_vars.indoor_transition = 0;
+end
+public_vars.indoor_prev = public_vars.indoor;
 
 
 
 
 
 % 9. Update particle filter
-if public_vars.pf_enabled
+if read_only_vars.counter == 1 && public_vars.indoor
+    public_vars = init_particle_filter(read_only_vars, public_vars);
+elseif public_vars.indoor_transition == 1
+    public_vars.particles = zeros(read_only_vars.max_particles/2,3);
+    public_vars.particles = public_vars.particles + public_vars.mu;
+elseif public_vars.indoor
     public_vars.particles = update_particle_filter(read_only_vars, public_vars);
 end
 
 % 10. Update Kalman filter
 if read_only_vars.counter == 100
     public_vars = init_kalman_filter(read_only_vars, public_vars);
-elseif read_only_vars.counter > 100 
+elseif read_only_vars.counter > 100 && ~any(isnan(read_only_vars.gnss_position))
     [public_vars.mu, public_vars.sigma] = update_kalman_filter(read_only_vars, public_vars);
 
+
+end
+
+if read_only_vars.counter > 100
     % 11. Estimate current robot position
-    public_vars.estimated_pose = estimate_pose(public_vars); % (x,y,theta)
+    public_vars.estimated_pose = estimate_pose(public_vars, read_only_vars); % (x,y,theta)
 
 
     % 12. Path planning
@@ -151,9 +166,9 @@ elseif read_only_vars.counter > 100
     % 13. Plan next motion command
 
     public_vars = plan_motion(read_only_vars, public_vars);
-
+else
+    public_vars.motion_vector = [0.080, 0.02];
 end
-
 
 end
 
