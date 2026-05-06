@@ -1,44 +1,33 @@
-function [weights] = weight_particles(particle_measurements, lidar_distances)
+function [weights] = weight_particles(particle_measurements, lidar_distances, public_vars)
 %WEIGHT_PARTICLES Summary of this function goes here
 
-N = size(particle_measurements, 1);
-weights = ones(N,1) / N;
+    N = size(particle_measurements, 1);
+    weights = ones(N,1) / N;
 
-% lidar_sigma = 0.9; % lidar std z week 1 0.0497
-% 
-% for n = 1:N
-%     summ = 0;
-%     for i = 1:length(lidar_distances)
-%         summ = summ + (lidar_distances(i) - particle_measurements(n,i))^2;
-%     end
-%     if ~isnan(summ)
-%         weights(n) = exp( (-1 / ( 2* lidar_sigma^2 )) * summ);
-%     else
-%         weights(n) = 0.000001;
-%     end
-% end
-% 
-% weights = weights / sum(weights);
-
-
-for n = 1:N
-    summ = 0;
-    for i = 1:length(lidar_distances)
-        summ = summ + (particle_measurements(n,i) - lidar_distances(i))^2;
-    end
-
-    if summ == 0
-        summ = 0.0000001;
-    end
-
-    if ~isnan(summ)
-        weights(n) = 1 / sqrt(summ);
+    if public_vars.state == "INITIALIZING"
+        sigma_L = 0.9; % Task 1 0.0498
     else
-        weights(n) = 0.00000001;
+        sigma_L = 0.2;
     end
+
+    particle_measurements(isinf(particle_measurements)) = 100;
+    lidar_distances(isinf(lidar_distances)) = 100;
+    particle_measurements(isnan(particle_measurements)) = 100;
+    lidar_distances(isnan(lidar_distances)) = 100;
+    
+    for n = 1:N
+        % Rozdíly mezi měřením robota a simulací částice
+        diffs = particle_measurements(n,:) - lidar_distances;
+        sum_sq_err = sum(diffs.^2);      
+        weights(n) = exp(-sum_sq_err / (2 * sigma_L^2)); % Gaussova váha
+    end
+
+    % Normalizace
+    if sum(weights) > 0
+        weights = weights / sum(weights);
+    else
+        weights = ones(N,1) / N;
+    end
+
+
 end
-
-weights = weights / sum(weights);
-
-end
-

@@ -20,7 +20,7 @@ function [target, public_vars] = get_target(public_vars, P_point)
     distances = vecnorm(selected_points - P_point, 2, 2); %2 eukli. vz., 2 podle řádků v matici
     [min_distance, index] = min(distances);
 
-    if min_distance < 0.4
+    if min_distance < 0.15
         if (actual_path_index + index - 1) < length(path)
             actual_path_index = actual_path_index + 1;
         end

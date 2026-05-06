@@ -1,17 +1,16 @@
-function [new_particles] = resample_particles(particles, weights, read_only_vars)
+function [new_particles] = resample_particles(particles, weights, read_only_vars, public_vars)
 %RESAMPLE_PARTICLES Summary of this function goes here
 
 N = length(particles(:,1));
 
-N_random = floor(N * 0.1); %round down
 
 index = randi(N);
 w_max = max(weights);
 new_particles = zeros(N,3);
 
-
+beta = 0;
 for i = 1:N
-    beta = rand() * 2 * w_max;
+    beta = beta + rand() * 2 * w_max;
     while weights(index) < beta
         beta = beta - weights(index);
         index = index + 1;
@@ -33,6 +32,13 @@ x_map_length = x_map_limit(2) - x_map_limit(1);
 x_map_offset = x_map_limit(1);
 y_map_length = y_map_limit(2) - y_map_limit(1);
 y_map_offset = y_map_limit(1);
+
+if public_vars.state == "INITIALIZING"
+    N_random = floor(N * 0.4); %round down
+else
+    N_random = floor(N * 0.1); %round down
+end
+
 
 for i = 1:N_random
     index = randi(N);

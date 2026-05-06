@@ -3,15 +3,14 @@ function [public_vars] = plan_motion(read_only_vars, public_vars)
 
 % I. Pick navigation target
 epsilon = 0.1; %0.25
-kappa = 1.0; %6
+kappa = 1.5; %6
+
 
 if public_vars.path_index >= length(public_vars.path)
     epsilon = 0.1;
 end
 
 
-% R_pose = read_only_vars.mocap_pose(1:2);
-% R_theta = read_only_vars.mocap_pose(3);
 
 R_pose = public_vars.estimated_pose(1:2);
 R_theta = public_vars.estimated_pose(3);
@@ -27,6 +26,7 @@ dP = kappa * (G_pose - P_pose);
 %limit speed
 computed_velocity = norm(dP);
 max_velocity = read_only_vars.agent_drive.max_vel;
+
 if computed_velocity > max_velocity
     dP = dP * (max_velocity / computed_velocity);
 end

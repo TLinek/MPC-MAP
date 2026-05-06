@@ -1,13 +1,6 @@
 function [estimated_pose] = estimate_pose(public_vars, read_only_vars)
 %ESTIMATE_POSE Summary of this function goes here
 
-%estimated_pose = nan(1,3);
-
-%estimated_pose = public_vars.mu;
-
-
-
-
 if any(isnan(read_only_vars.gnss_position))
     estimated_pose(1) = median(public_vars.particles(:,1)); 
     estimated_pose(2) = median(public_vars.particles(:,2));
@@ -18,6 +11,4 @@ else
     estimated_pose = public_vars.mu;
 end
 
-
 end
-

@@ -29,7 +29,7 @@ path_found = false;
 
 
 % dilatace zdí pomocí konvoluce:
-kernel = ones(5,5); % jádro 3x3 roztáhne překážku o jeden pixel na všechny strany (5*5 o 2 pixely atd.)
+kernel = ones(public_vars.wall_dilatation,public_vars.wall_dilatation); % jádro 3x3 roztáhne překážku o jeden pixel na všechny strany (5*5 o 2 pixely atd.)
 dilated_grid = conv2(occupancy_grid, kernel, 'same'); %same pro oříznutí na původní velikost
 occupancy_grid = dilated_grid > 0; % převod zpět na 1 a 0 (cokoli > 0 je teď zeď)
 
