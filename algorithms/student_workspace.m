@@ -1,6 +1,6 @@
 function [public_vars] = student_workspace(read_only_vars, public_vars)
 
-% --- 1. Inicializace ---
+% ---  Inicializace ---
 if (read_only_vars.counter == 1)
     public_vars.state = "INITIALIZING"; % Výchozí stav
     public_vars.init_counter = 0;
@@ -9,13 +9,15 @@ if (read_only_vars.counter == 1)
     public_vars.indoor_prev = any(isnan(read_only_vars.gnss_position));
     public_vars.front_min_distace = 0.4;
     public_vars.init_duration = 50;
+    public_vars.KF_corect_init = false;
 end
 
-% --- 2. Detekce prostředí (Indoor/Outdoor) ---
+% ---  Detekce prostředí (Indoor/Outdoor) ---
 public_vars.indoor = any(isnan(read_only_vars.gnss_position));
 
+%fprintf("Iterace: %i\n",read_only_vars.counter);
 
-% --- 3.STAVOVÝ AUTOMAT ---
+% --- STAVOVÝ AUTOMAT ---
 switch public_vars.state
     
 
@@ -38,6 +40,11 @@ switch public_vars.state
         % Inicializace Kalman Filteru
         if public_vars.init_counter == public_vars.init_duration
             public_vars = init_kalman_filter(read_only_vars, public_vars);
+            if public_vars.indoor == 1
+                public_vars.KF_corect_init = false;
+            else
+                public_vars.KF_corect_init = true;
+            end
         end
     
         % Průběžný update filtrů (zpřesňování pozice během pohybu robota)
@@ -71,7 +78,7 @@ switch public_vars.state
         
         % Návrat do init (REINICIALIZACE)
         if public_vars.back_counter > 10
-            fprintf("Zpet do init 1")
+            fprintf("Zpet do init 1\n")
             public_vars.state = "INITIALIZING";
             public_vars.init_counter = 0; % Reset času pro init
         end
@@ -99,7 +106,7 @@ switch public_vars.state
             else
                 fprintf('Nelze naplánovat cestu ani s menší dilatací! -> znovu inicializace');
                 public_vars.state = "INITIALIZING"; % Restart
-                fprintf("Zpet do init 3")
+                fprintf("Zpet do init 3\n")
                 public_vars.init_counter = 0;
             end
         end
@@ -121,7 +128,7 @@ switch public_vars.state
         % FALEŠNÝ DOJEZD DO CÍLE -> reinit
         if public_vars.path_index == size(public_vars.path,1)
             public_vars.state = "INITIALIZING";
-            fprintf("Zpet do init 2")
+            fprintf("Zpet do init 2\n")
             public_vars.init_counter = 0;
             public_vars.motion_vector = [0, 0]; %zastavit pohyb
         end
@@ -145,8 +152,14 @@ function pv = update_localization(read_only_vars, pv)
 
     if pv.indoor == 0 && pv.indoor_prev == 1
         % VÝJEZD VEN: Nastavení pozice KF podle aktuálního odhadu z PF
+        if pv.KF_corect_init == false
+            pv.sigma = [0.1, 0.0011, 0;   
+                        0.0011, 0.1, 0;   
+                        0,      0,     0.1];
+            pv.KF_corect_init = true;
+        end
         pv.mu = pv.estimated_pose;
-         pv.particles = [];
+        pv.particles = [];
     end
     
     % update podle prostředí
